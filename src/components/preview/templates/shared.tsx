@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe } from 'lucide-react';
+import { GithubIcon, LinkedinIcon } from '../../ui/BrandIcons';
 import type { CvData } from '../../../types';
 import { formatRange } from '../../../lib/format';
 
@@ -15,8 +16,8 @@ export function ContactRow({ cv, className = '', iconSize = 12 }: { cv: CvData; 
     p.phone && { icon: <Phone size={iconSize} />, text: p.phone },
     p.location && { icon: <MapPin size={iconSize} />, text: p.location },
     p.website && { icon: <Globe size={iconSize} />, text: p.website },
-    p.linkedin && { icon: <Linkedin size={iconSize} />, text: p.linkedin },
-    p.github && { icon: <Github size={iconSize} />, text: p.github },
+    p.linkedin && { icon: <LinkedinIcon size={iconSize} />, text: p.linkedin },
+    p.github && { icon: <GithubIcon size={iconSize} />, text: p.github },
   ].filter(Boolean) as { icon: ReactNode; text: string }[];
 
   return (

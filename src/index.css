@@ -82,6 +82,8 @@ body {
 }
 
 /* ---- Print / PDF export ---- */
+/* react-to-print renders #cv-print-area inside an isolated iframe, so this only
+   needs to reset that node's own chrome and force background colors to print. */
 @media print {
   @page {
     size: A4;
@@ -92,31 +94,16 @@ body {
     background: white !important;
   }
 
-  body * {
-    visibility: hidden;
+  #cv-print-area {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0;
+    box-shadow: none !important;
+    border-radius: 0 !important;
   }
 
   #cv-print-area, #cv-print-area * {
-    visibility: visible;
-  }
-
-  #cv-print-area {
-    position: absolute;
-    inset: 0;
-    width: 210mm;
-    margin: 0;
-    box-shadow: none !important;
-    border: none !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-  }
-
-  #cv-print-area * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .no-print {
-    display: none !important;
   }
 }

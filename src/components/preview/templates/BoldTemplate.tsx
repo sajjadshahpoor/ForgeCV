@@ -1,4 +1,5 @@
-import { Mail, Phone, MapPin, Globe, Linkedin, Github } from 'lucide-react';
+import { Mail, Phone, MapPin, Globe } from 'lucide-react';
+import { GithubIcon, LinkedinIcon } from '../../ui/BrandIcons';
 import type { TemplateProps } from './shared';
 import { ExperienceBlock, ProjectsBlock } from './shared';
 import { SECTION_LABELS } from '../../../types';
@@ -25,8 +26,8 @@ export function BoldTemplate({ cv, sections }: TemplateProps) {
           {p.phone && <span className="flex items-center gap-1.5"><Phone size={11} /> {p.phone}</span>}
           {p.location && <span className="flex items-center gap-1.5"><MapPin size={11} /> {p.location}</span>}
           {p.website && <span className="flex items-center gap-1.5"><Globe size={11} /> {p.website}</span>}
-          {p.linkedin && <span className="flex items-center gap-1.5"><Linkedin size={11} /> {p.linkedin}</span>}
-          {p.github && <span className="flex items-center gap-1.5"><Github size={11} /> {p.github}</span>}
+          {p.linkedin && <span className="flex items-center gap-1.5"><LinkedinIcon size={11} /> {p.linkedin}</span>}
+          {p.github && <span className="flex items-center gap-1.5"><GithubIcon size={11} /> {p.github}</span>}
         </div>
 
         {sideSections.map((id) => (

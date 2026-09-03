@@ -5,7 +5,7 @@ import type { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useCvStore } from '../../store/useCvStore';
 import type { ExperienceItem } from '../../types';
-import { Input, TextArea } from '../ui/Field';
+import { Input } from '../ui/Field';
 import { SectionCard } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { SortableItem, DragHandle } from '../ui/SortableItem';
