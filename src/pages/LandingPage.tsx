@@ -82,8 +82,8 @@ export function LandingPage({ onStart }: { onStart: () => void }) {
             <span className="h-2.5 w-2.5 rounded-full bg-amber-500/70" />
             <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/70" />
           </div>
-          <div className="grid grid-cols-5 gap-3 rounded-xl bg-white p-4 text-left">
-            <div className="col-span-2 rounded-lg bg-ink-100 p-3">
+          <div className="grid grid-cols-1 gap-3 rounded-xl bg-white p-4 text-left sm:grid-cols-5">
+            <div className="rounded-lg bg-ink-100 p-3 sm:col-span-2">
               <div className="h-3 w-2/3 rounded bg-ink-700/60" />
               <div className="mt-2 h-2 w-1/2 rounded bg-violet-500/60" />
               <div className="mt-4 space-y-1.5">
@@ -92,7 +92,7 @@ export function LandingPage({ onStart }: { onStart: () => void }) {
                 <div className="h-1.5 w-full rounded bg-ink-300" />
               </div>
             </div>
-            <div className="col-span-3 rounded-lg border border-ink-200 p-3">
+            <div className="rounded-lg border border-ink-200 p-3 sm:col-span-3">
               <div className="h-3 w-1/2 rounded bg-ink-800" />
               <div className="mt-3 flex items-center gap-2 rounded-md bg-emerald-50 px-2 py-1.5">
                 <span className="h-2 w-2 rounded-full bg-emerald-500" />

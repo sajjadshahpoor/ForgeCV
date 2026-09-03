@@ -62,7 +62,7 @@ export function PersonalForm() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Input label="Full name" value={p.fullName} onChange={(e) => updatePersonal({ fullName: e.target.value })} placeholder="Jane Doe" />
           <Input label="Job title" value={p.title} onChange={(e) => updatePersonal({ title: e.target.value })} placeholder="Product Designer" />
           <Input label="Email" type="email" value={p.email} onChange={(e) => updatePersonal({ email: e.target.value })} placeholder="jane@email.com" />

@@ -27,7 +27,7 @@ export function ProjectsForm() {
         {cv.projects.map((proj) => (
           <div key={proj.id} className="rounded-xl border border-ink-800 bg-ink-950/40 p-4">
             <div className="mb-2 flex items-start gap-2">
-              <div className="grid flex-1 grid-cols-2 gap-2">
+              <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
                 <Input placeholder="Project name" value={proj.name} onChange={(e) => updateProject(proj.id, { name: e.target.value })} />
                 <Input placeholder="Link (optional)" value={proj.link} onChange={(e) => updateProject(proj.id, { link: e.target.value })} />
               </div>

@@ -26,7 +26,7 @@ export function EducationForm() {
         {cv.education.map((ed) => (
           <div key={ed.id} className="rounded-xl border border-ink-800 bg-ink-950/40 p-4">
             <div className="mb-2 flex items-start gap-2">
-              <div className="grid flex-1 grid-cols-2 gap-2">
+              <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
                 <Input placeholder="School" value={ed.school} onChange={(e) => updateEducation(ed.id, { school: e.target.value })} />
                 <Input placeholder="Degree (e.g. B.S.)" value={ed.degree} onChange={(e) => updateEducation(ed.id, { degree: e.target.value })} />
                 <Input placeholder="Field of study" value={ed.field} onChange={(e) => updateEducation(ed.id, { field: e.target.value })} />

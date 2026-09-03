@@ -24,11 +24,15 @@ export function CertificationsForm() {
       )}
       <div className="flex flex-col gap-2">
         {cv.certifications.map((c) => (
-          <div key={c.id} className="grid grid-cols-[1fr_1fr_110px_auto] items-center gap-2 rounded-xl border border-ink-800 bg-ink-950/40 p-3">
+          <div key={c.id} className="relative grid grid-cols-1 gap-2 rounded-xl border border-ink-800 bg-ink-950/40 p-3 pr-9 sm:grid-cols-[1fr_1fr_110px] sm:items-center sm:pr-10">
             <Input placeholder="Certification name" value={c.name} onChange={(e) => updateCertification(c.id, { name: e.target.value })} />
             <Input placeholder="Issuer" value={c.issuer} onChange={(e) => updateCertification(c.id, { issuer: e.target.value })} />
             <Input type="month" value={c.date} onChange={(e) => updateCertification(c.id, { date: e.target.value })} />
-            <button type="button" onClick={() => removeCertification(c.id)} className="text-ink-400 hover:text-red-400">
+            <button
+              type="button"
+              onClick={() => removeCertification(c.id)}
+              className="absolute right-3 top-3 text-ink-400 hover:text-red-400 sm:top-1/2 sm:-translate-y-1/2"
+            >
               <Trash2 size={16} />
             </button>
           </div>
@@ -58,7 +62,7 @@ export function LanguagesForm() {
       )}
       <div className="flex flex-col gap-2">
         {cv.languages.map((l) => (
-          <div key={l.id} className="grid grid-cols-[1fr_1fr_auto] items-center gap-2 rounded-xl border border-ink-800 bg-ink-950/40 p-3">
+          <div key={l.id} className="relative grid grid-cols-1 gap-2 rounded-xl border border-ink-800 bg-ink-950/40 p-3 pr-9 sm:grid-cols-[1fr_1fr] sm:items-center sm:pr-10">
             <Input placeholder="Language" value={l.name} onChange={(e) => updateLanguage(l.id, { name: e.target.value })} />
             <select
               value={l.level}
@@ -72,7 +76,11 @@ export function LanguagesForm() {
                 </option>
               ))}
             </select>
-            <button type="button" onClick={() => removeLanguage(l.id)} className="text-ink-400 hover:text-red-400">
+            <button
+              type="button"
+              onClick={() => removeLanguage(l.id)}
+              className="absolute right-3 top-3 text-ink-400 hover:text-red-400 sm:top-1/2 sm:-translate-y-1/2"
+            >
               <Trash2 size={16} />
             </button>
           </div>

@@ -71,7 +71,7 @@ function KeywordSuggestButton({ keyword }: { keyword: string }) {
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex items-center gap-1.5">
+      <div className="flex flex-wrap items-center gap-1.5">
         <span className="rounded-md bg-amber-400/10 px-2 py-1 text-xs text-amber-300">{keyword}</span>
         <button type="button" onClick={quickAddToSkills} className="text-[11px] text-ink-400 underline decoration-dotted hover:text-ink-100">
           add to skills

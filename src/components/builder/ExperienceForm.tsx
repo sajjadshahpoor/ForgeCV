@@ -99,7 +99,7 @@ function ExperienceEntry({ exp, handleProps }: { exp: ExperienceItem; handleProp
     <div className="rounded-xl border border-ink-800 bg-ink-950/40 p-4">
       <div className="mb-3 flex items-start gap-2">
         <DragHandle {...handleProps} />
-        <div className="grid flex-1 grid-cols-2 gap-2">
+        <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-2">
           <Input placeholder="Company" value={exp.company} onChange={(e) => updateExperience(exp.id, { company: e.target.value })} />
           <Input placeholder="Role / title" value={exp.role} onChange={(e) => updateExperience(exp.id, { role: e.target.value })} />
           <Input placeholder="Location" value={exp.location} onChange={(e) => updateExperience(exp.id, { location: e.target.value })} />
