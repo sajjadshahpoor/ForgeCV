@@ -15,6 +15,7 @@ import {
   Eye,
   Pencil,
   Maximize,
+  Share2,
 } from 'lucide-react';
 import { useCvStore } from '../store/useCvStore';
 import { Logo } from '../components/layout/Logo';
@@ -30,6 +31,7 @@ import { SectionManager } from '../components/builder/SectionManager';
 import { DesignPanel } from '../components/builder/DesignPanel';
 import { AIPanel } from '../components/builder/AIPanel';
 import { SamplePickerModal } from '../components/builder/SamplePickerModal';
+import { ShareModal } from '../components/builder/ShareModal';
 import { exportCvAsJson, importCvFromFile } from '../lib/storage';
 
 type Tab = 'content' | 'design' | 'ai';
@@ -43,6 +45,7 @@ export function BuilderPage({ onBack }: { onBack: () => void }) {
   const [mobileView, setMobileView] = useState<MobileView>('edit');
   const [zoom, setZoom] = useState(0.72);
   const [samplePickerOpen, setSamplePickerOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const previewWrapRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -112,6 +115,9 @@ export function BuilderPage({ onBack }: { onBack: () => void }) {
           </Button>
           <Button size="sm" variant="ghost" onClick={onReset} title="Reset">
             <RotateCcw size={13} /> <span className="hidden sm:inline">Reset</span>
+          </Button>
+          <Button size="sm" variant="ghost" onClick={() => setShareModalOpen(true)} title="Share resume link">
+            <Share2 size={13} /> <span className="hidden sm:inline">Share</span>
           </Button>
           <Button size="sm" variant="primary" onClick={() => handlePrint()} title="Export PDF">
             <Download size={13} /> <span className="hidden sm:inline">Export PDF</span>
@@ -186,6 +192,7 @@ export function BuilderPage({ onBack }: { onBack: () => void }) {
       </div>
 
       <SamplePickerModal open={samplePickerOpen} onClose={() => setSamplePickerOpen(false)} />
+      <ShareModal open={shareModalOpen} onClose={() => setShareModalOpen(false)} cv={cv} />
     </div>
   );
 }

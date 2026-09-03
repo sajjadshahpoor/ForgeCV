@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles, ShieldCheck, LayoutTemplate, Zap, Lock, Download } from 'lucide-react';
+import { ArrowRight, Sparkles, ShieldCheck, LayoutTemplate, Zap, Lock, Download, Link2, AlertTriangle } from 'lucide-react';
 import { Logo } from '../components/layout/Logo';
 import { GithubIcon } from '../components/ui/BrandIcons';
 import { Button } from '../components/ui/Button';
@@ -13,6 +13,11 @@ const FEATURES = [
     icon: <Zap size={18} />,
     title: 'Optional live AI writing',
     body: 'Connect a free Google Gemini key to get AI-drafted summaries and one-click bullet rewrites. Your key never leaves your browser.',
+  },
+  {
+    icon: <Link2 size={18} />,
+    title: 'Shareable resume link',
+    body: 'Turn your resume into a live link — the whole thing is encoded in the URL, no server involved. Send it instead of a PDF; recipients can view, download, or start their own copy.',
   },
   {
     icon: <LayoutTemplate size={18} />,
@@ -36,11 +41,18 @@ const FEATURES = [
   },
 ];
 
-export function LandingPage({ onStart }: { onStart: () => void }) {
+export function LandingPage({ onStart, shareLinkBroken = false }: { onStart: () => void; shareLinkBroken?: boolean }) {
   return (
     <div className="relative overflow-hidden bg-ink-950">
       <div className="pointer-events-none absolute -left-40 -top-40 h-[500px] w-[500px] animate-float rounded-full bg-violet-600/25 blur-[120px]" />
       <div className="pointer-events-none absolute -right-40 top-40 h-[500px] w-[500px] rounded-full bg-amber-500/15 blur-[120px]" style={{ animationDelay: '1s' }} />
+
+      {shareLinkBroken && (
+        <div className="relative z-10 flex items-center justify-center gap-2 bg-amber-500/15 px-4 py-2.5 text-center text-sm text-amber-200">
+          <AlertTriangle size={14} className="shrink-0" />
+          That resume link looks incomplete or corrupted — it may have been cut off when it was shared.
+        </div>
+      )}
 
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <Logo />
