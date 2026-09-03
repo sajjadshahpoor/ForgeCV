@@ -1,4 +1,4 @@
-import type { CvData } from '../types';
+import type { CvData, SectionId } from '../types';
 
 export const emptyCv: CvData = {
   personal: {
@@ -27,89 +27,527 @@ export const emptyCv: CvData = {
   fontScale: 1,
 };
 
-export const sampleCv: CvData = {
-  personal: {
-    fullName: 'Alex Rivera',
-    title: 'Senior Frontend Engineer',
-    email: 'alex.rivera@email.com',
-    phone: '+1 (555) 012-3456',
-    location: 'Austin, TX',
-    website: 'alexrivera.dev',
-    linkedin: 'linkedin.com/in/alexrivera',
-    github: 'github.com/alexrivera',
-    summary:
-      'Frontend engineer with 6+ years building performant, accessible web applications used by millions of users. Specializes in React, TypeScript, and design systems. Led a 5-person team that cut page load time by 40% and shipped a component library adopted across 12 product teams.',
-    photo: '',
+const STANDARD_ORDER: SectionId[] = ['summary', 'experience', 'projects', 'education', 'skills', 'certifications', 'languages'];
+const EDU_FIRST_ORDER: SectionId[] = ['summary', 'education', 'experience', 'projects', 'skills', 'certifications', 'languages'];
+
+export interface SampleProfile {
+  id: string;
+  label: string;
+  blurb: string;
+  data: CvData;
+}
+
+export const SAMPLE_PROFILES: SampleProfile[] = [
+  {
+    id: 'software-engineer',
+    label: 'Software Engineer',
+    blurb: 'Frontend / full-stack, tech industry',
+    data: {
+      personal: {
+        fullName: 'Alex Rivera',
+        title: 'Senior Frontend Engineer',
+        email: 'alex.rivera@email.com',
+        phone: '+1 (555) 012-3456',
+        location: 'Austin, TX',
+        website: 'alexrivera.dev',
+        linkedin: 'linkedin.com/in/alexrivera',
+        github: 'github.com/alexrivera',
+        summary:
+          'Frontend engineer with 6+ years building performant, accessible web applications used by millions of users. Specializes in React, TypeScript, and design systems. Led a 5-person team that cut page load time by 40% and shipped a component library adopted across 12 product teams.',
+        photo: '',
+      },
+      experience: [
+        {
+          id: 'exp-1',
+          company: 'Northwind Labs',
+          role: 'Senior Frontend Engineer',
+          location: 'Austin, TX',
+          startDate: '2022-03',
+          endDate: '',
+          current: true,
+          bullets: [
+            'Led migration of a legacy Angular app to React and TypeScript, reducing bundle size by 38% and cutting time-to-interactive from 4.2s to 1.6s',
+            'Built and open-sourced a component library adopted by 12 internal teams, reducing duplicate UI code by an estimated 6,000 lines',
+            'Mentored 4 junior engineers through structured pairing and code review, with 3 promoted within 18 months',
+            'Partnered with design and product to launch a redesigned checkout flow that increased conversion by 14%',
+          ],
+        },
+        {
+          id: 'exp-2',
+          company: 'Brightpath Software',
+          role: 'Frontend Engineer',
+          location: 'Remote',
+          startDate: '2019-06',
+          endDate: '2022-02',
+          current: false,
+          bullets: [
+            'Developed and maintained a customer-facing dashboard serving 80,000+ monthly active users',
+            'Implemented automated visual regression testing, cutting UI bugs shipped to production by 60%',
+            'Improved Lighthouse accessibility score from 71 to 96 across core product surfaces',
+          ],
+        },
+      ],
+      education: [
+        {
+          id: 'edu-1',
+          school: 'University of Texas at Austin',
+          degree: 'B.S.',
+          field: 'Computer Science',
+          location: 'Austin, TX',
+          startDate: '2015-08',
+          endDate: '2019-05',
+          details: 'Graduated with honors. Coursework in distributed systems, HCI, and algorithms.',
+        },
+      ],
+      projects: [
+        {
+          id: 'proj-1',
+          name: 'Forge UI',
+          description:
+            'Open-source, accessible React component library with 1,800+ GitHub stars, used in production by 20+ companies.',
+          link: 'github.com/alexrivera/forge-ui',
+          tech: ['React', 'TypeScript', 'Radix UI', 'Vite'],
+        },
+      ],
+      skills: [
+        { id: 'sk-1', category: 'Languages', items: ['TypeScript', 'JavaScript', 'HTML5', 'CSS3'] },
+        { id: 'sk-2', category: 'Frameworks', items: ['React', 'Next.js', 'Vue', 'Node.js'] },
+        { id: 'sk-3', category: 'Tools', items: ['Vite', 'Webpack', 'Playwright', 'Figma'] },
+      ],
+      certifications: [
+        { id: 'cert-1', name: 'AWS Certified Developer – Associate', issuer: 'Amazon Web Services', date: '2023-05', link: '' },
+      ],
+      languages: [
+        { id: 'lang-1', name: 'English', level: 'Native' },
+        { id: 'lang-2', name: 'Spanish', level: 'Professional working proficiency' },
+      ],
+      sectionOrder: STANDARD_ORDER,
+      hiddenSections: [],
+      template: 'modern',
+      accentColor: '#6d28d9',
+      fontFamily: 'sans',
+      fontScale: 1,
+    },
   },
-  experience: [
-    {
-      id: 'exp-1',
-      company: 'Northwind Labs',
-      role: 'Senior Frontend Engineer',
-      location: 'Austin, TX',
-      startDate: '2022-03',
-      endDate: '',
-      current: true,
-      bullets: [
-        'Led migration of a legacy Angular app to React and TypeScript, reducing bundle size by 38% and cutting time-to-interactive from 4.2s to 1.6s',
-        'Built and open-sourced a component library adopted by 12 internal teams, reducing duplicate UI code by an estimated 6,000 lines',
-        'Mentored 4 junior engineers through structured pairing and code review, with 3 promoted within 18 months',
-        'Partnered with design and product to launch a redesigned checkout flow that increased conversion by 14%',
+  {
+    id: 'product-manager',
+    label: 'Product Manager',
+    blurb: 'B2B SaaS product leadership',
+    data: {
+      personal: {
+        fullName: 'Morgan Ellis',
+        title: 'Senior Product Manager',
+        email: 'morgan.ellis@email.com',
+        phone: '+1 (555) 244-7781',
+        location: 'Chicago, IL',
+        website: 'morganellis.co',
+        linkedin: 'linkedin.com/in/morganellis',
+        github: '',
+        summary:
+          'Product manager with 8 years shipping B2B SaaS products from zero-to-one through scale. Led cross-functional teams of up to 15 across engineering, design, and go-to-market. Grew a core product line from $2M to $14M ARR in three years by combining customer research with disciplined prioritization.',
+        photo: '',
+      },
+      experience: [
+        {
+          id: 'exp-1',
+          company: 'Fieldstone Analytics',
+          role: 'Senior Product Manager',
+          location: 'Chicago, IL',
+          startDate: '2021-04',
+          endDate: '',
+          current: true,
+          bullets: [
+            'Owned the roadmap for a self-serve analytics platform, growing ARR from $2M to $14M over three years',
+            'Ran 40+ customer discovery interviews to validate a new pricing model, increasing free-to-paid conversion by 22%',
+            'Partnered with engineering leadership to cut release cycle time from 6 weeks to 2 through a phased rollout process',
+            'Built and coached a team of 3 associate PMs, two of whom were promoted to Senior PM',
+          ],
+        },
+        {
+          id: 'exp-2',
+          company: 'Harborlight Software',
+          role: 'Product Manager',
+          location: 'Chicago, IL',
+          startDate: '2018-01',
+          endDate: '2021-03',
+          current: false,
+          bullets: [
+            'Launched a mobile companion app from concept to GA in 9 months, reaching 50,000 downloads in the first quarter',
+            'Defined and tracked North Star metrics with data science, aligning 4 product squads around a single growth goal',
+            'Reduced churn by 9 points by shipping an onboarding redesign informed by usage-funnel analysis',
+          ],
+        },
       ],
-    },
-    {
-      id: 'exp-2',
-      company: 'Brightpath Software',
-      role: 'Frontend Engineer',
-      location: 'Remote',
-      startDate: '2019-06',
-      endDate: '2022-02',
-      current: false,
-      bullets: [
-        'Developed and maintained a customer-facing dashboard serving 80,000+ monthly active users',
-        'Implemented automated visual regression testing, cutting UI bugs shipped to production by 60%',
-        'Improved Lighthouse accessibility score from 71 to 96 across core product surfaces',
+      education: [
+        {
+          id: 'edu-1',
+          school: 'Indiana University, Kelley School of Business',
+          degree: 'B.S.',
+          field: 'Business Analytics',
+          location: 'Bloomington, IN',
+          startDate: '2012-08',
+          endDate: '2016-05',
+          details: '',
+        },
       ],
+      projects: [],
+      skills: [
+        { id: 'sk-1', category: 'Product', items: ['Roadmapping', 'Product Strategy', 'A/B Testing', 'User Research'] },
+        { id: 'sk-2', category: 'Tools', items: ['Jira', 'Amplitude', 'Figma', 'SQL'] },
+        { id: 'sk-3', category: 'Leadership', items: ['Stakeholder Management', 'Cross-functional Leadership', 'OKRs'] },
+      ],
+      certifications: [
+        { id: 'cert-1', name: 'Certified Scrum Product Owner (CSPO)', issuer: 'Scrum Alliance', date: '2020-09', link: '' },
+      ],
+      languages: [{ id: 'lang-1', name: 'English', level: 'Native' }],
+      sectionOrder: STANDARD_ORDER,
+      hiddenSections: [],
+      template: 'classic',
+      accentColor: '#1d4ed8',
+      fontFamily: 'serif',
+      fontScale: 1,
     },
-  ],
-  education: [
-    {
-      id: 'edu-1',
-      school: 'University of Texas at Austin',
-      degree: 'B.S.',
-      field: 'Computer Science',
-      location: 'Austin, TX',
-      startDate: '2015-08',
-      endDate: '2019-05',
-      details: 'Graduated with honors. Coursework in distributed systems, HCI, and algorithms.',
+  },
+  {
+    id: 'marketing-manager',
+    label: 'Marketing Manager',
+    blurb: 'Growth & digital marketing',
+    data: {
+      personal: {
+        fullName: 'Priya Nair',
+        title: 'Growth Marketing Manager',
+        email: 'priya.nair@email.com',
+        phone: '+1 (555) 398-2214',
+        location: 'New York, NY',
+        website: 'priyanair.com',
+        linkedin: 'linkedin.com/in/priyanair',
+        github: '',
+        summary:
+          'Growth marketer with 5 years driving pipeline for B2C and B2B brands through performance marketing, lifecycle campaigns, and content strategy. Managed budgets up to $3M/year and consistently beat CAC targets while scaling spend.',
+        photo: '',
+      },
+      experience: [
+        {
+          id: 'exp-1',
+          company: 'Lumenwave',
+          role: 'Growth Marketing Manager',
+          location: 'New York, NY',
+          startDate: '2022-06',
+          endDate: '',
+          current: true,
+          bullets: [
+            'Managed a $3M annual paid media budget across Google, Meta, and TikTok, reducing blended CAC by 27%',
+            'Built and launched a lifecycle email program that lifted repeat purchase rate by 18%',
+            'Ran 60+ A/B tests on landing pages and ad creative, improving conversion rate from 2.1% to 3.4%',
+            'Led a team of 2 marketing associates and managed relationships with 3 external agencies',
+          ],
+        },
+        {
+          id: 'exp-2',
+          company: 'Basecamp Retail Co.',
+          role: 'Marketing Specialist',
+          location: 'New York, NY',
+          startDate: '2019-08',
+          endDate: '2022-05',
+          current: false,
+          bullets: [
+            'Grew organic social following from 8,000 to 95,000 across Instagram and TikTok in 18 months',
+            'Coordinated influencer partnerships that generated $400K in attributed revenue',
+            'Produced monthly performance reports that shaped a 20% shift in channel budget allocation',
+          ],
+        },
+      ],
+      education: [
+        {
+          id: 'edu-1',
+          school: 'New York University',
+          degree: 'B.S.',
+          field: 'Marketing',
+          location: 'New York, NY',
+          startDate: '2015-08',
+          endDate: '2019-05',
+          details: '',
+        },
+      ],
+      projects: [],
+      skills: [
+        { id: 'sk-1', category: 'Channels', items: ['Paid Social', 'SEO', 'Email/Lifecycle', 'Content Marketing'] },
+        { id: 'sk-2', category: 'Tools', items: ['Google Analytics', 'HubSpot', 'Meta Ads Manager', 'Klaviyo'] },
+      ],
+      certifications: [
+        { id: 'cert-1', name: 'Google Ads Certification', issuer: 'Google', date: '2024-01', link: '' },
+        { id: 'cert-2', name: 'HubSpot Content Marketing Certification', issuer: 'HubSpot Academy', date: '2022-11', link: '' },
+      ],
+      languages: [
+        { id: 'lang-1', name: 'English', level: 'Native' },
+        { id: 'lang-2', name: 'Hindi', level: 'Fluent' },
+      ],
+      sectionOrder: STANDARD_ORDER,
+      hiddenSections: [],
+      template: 'minimal',
+      accentColor: '#c2410c',
+      fontFamily: 'sans',
+      fontScale: 1,
     },
-  ],
-  projects: [
-    {
-      id: 'proj-1',
-      name: 'Forge UI',
-      description:
-        'Open-source, accessible React component library with 1,800+ GitHub stars, used in production by 20+ companies.',
-      link: 'github.com/alexrivera/forge-ui',
-      tech: ['React', 'TypeScript', 'Radix UI', 'Vite'],
+  },
+  {
+    id: 'data-scientist',
+    label: 'Data Scientist',
+    blurb: 'Machine learning & analytics',
+    data: {
+      personal: {
+        fullName: 'Daniel Cho',
+        title: 'Data Scientist',
+        email: 'daniel.cho@email.com',
+        phone: '+1 (555) 771-0938',
+        location: 'Seattle, WA',
+        website: 'danielcho.io',
+        linkedin: 'linkedin.com/in/danielcho',
+        github: 'github.com/danielcho',
+        summary:
+          'Data scientist with 5 years building and shipping ML models in production, from demand forecasting to recommendation systems. Comfortable owning a problem from raw data to a deployed, monitored model. Strong collaborator with engineering and product.',
+        photo: '',
+      },
+      experience: [
+        {
+          id: 'exp-1',
+          company: 'Cascade Retail Group',
+          role: 'Data Scientist',
+          location: 'Seattle, WA',
+          startDate: '2021-09',
+          endDate: '',
+          current: true,
+          bullets: [
+            'Built a demand forecasting model that reduced inventory overstock by 19% across 400+ SKUs',
+            'Deployed a real-time product recommendation system serving 2M+ requests/day with p99 latency under 80ms',
+            'Designed an experimentation framework adopted by 3 teams, standardizing how A/B test significance is evaluated',
+            'Mentored 2 junior data scientists on model evaluation and production ML best practices',
+          ],
+        },
+        {
+          id: 'exp-2',
+          company: 'Alderwood Analytics',
+          role: 'Data Analyst',
+          location: 'Seattle, WA',
+          startDate: '2019-07',
+          endDate: '2021-08',
+          current: false,
+          bullets: [
+            'Built dashboards in Tableau tracking key business metrics for a 25-person leadership team',
+            'Automated a manual weekly reporting process, saving approximately 10 analyst-hours per week',
+            'Partnered with marketing to build a customer segmentation model used to target retention campaigns',
+          ],
+        },
+      ],
+      education: [
+        {
+          id: 'edu-1',
+          school: 'University of Washington',
+          degree: 'M.S.',
+          field: 'Statistics',
+          location: 'Seattle, WA',
+          startDate: '2017-09',
+          endDate: '2019-06',
+          details: '',
+        },
+        {
+          id: 'edu-2',
+          school: 'University of California, Davis',
+          degree: 'B.S.',
+          field: 'Applied Mathematics',
+          location: 'Davis, CA',
+          startDate: '2013-08',
+          endDate: '2017-05',
+          details: '',
+        },
+      ],
+      projects: [
+        {
+          id: 'proj-1',
+          name: 'churn-predict',
+          description: 'Open-source XGBoost pipeline for customer churn prediction with SHAP-based explainability, 400+ GitHub stars.',
+          link: 'github.com/danielcho/churn-predict',
+          tech: ['Python', 'XGBoost', 'SHAP', 'Docker'],
+        },
+      ],
+      skills: [
+        { id: 'sk-1', category: 'Languages', items: ['Python', 'SQL', 'R'] },
+        { id: 'sk-2', category: 'ML/Data', items: ['PyTorch', 'scikit-learn', 'Spark', 'Airflow'] },
+        { id: 'sk-3', category: 'Platforms', items: ['AWS SageMaker', 'Snowflake', 'Docker', 'MLflow'] },
+      ],
+      certifications: [],
+      languages: [
+        { id: 'lang-1', name: 'English', level: 'Native' },
+        { id: 'lang-2', name: 'Korean', level: 'Fluent' },
+      ],
+      sectionOrder: STANDARD_ORDER,
+      hiddenSections: [],
+      template: 'bold',
+      accentColor: '#0f766e',
+      fontFamily: 'sans',
+      fontScale: 1,
     },
-  ],
-  skills: [
-    { id: 'sk-1', category: 'Languages', items: ['TypeScript', 'JavaScript', 'HTML5', 'CSS3'] },
-    { id: 'sk-2', category: 'Frameworks', items: ['React', 'Next.js', 'Vue', 'Node.js'] },
-    { id: 'sk-3', category: 'Tools', items: ['Vite', 'Webpack', 'Playwright', 'Figma'] },
-  ],
-  certifications: [
-    { id: 'cert-1', name: 'AWS Certified Developer – Associate', issuer: 'Amazon Web Services', date: '2023-05', link: '' },
-  ],
-  languages: [
-    { id: 'lang-1', name: 'English', level: 'Native' },
-    { id: 'lang-2', name: 'Spanish', level: 'Professional working proficiency' },
-  ],
-  sectionOrder: ['summary', 'experience', 'projects', 'education', 'skills', 'certifications', 'languages'],
-  hiddenSections: [],
-  template: 'modern',
-  accentColor: '#6d28d9',
-  fontFamily: 'sans',
-  fontScale: 1,
-};
+  },
+  {
+    id: 'ux-designer',
+    label: 'UX Designer',
+    blurb: 'Product design & research',
+    data: {
+      personal: {
+        fullName: 'Sofia Marchetti',
+        title: 'Senior Product Designer',
+        email: 'sofia.marchetti@email.com',
+        phone: '+1 (555) 662-4410',
+        location: 'Los Angeles, CA',
+        website: 'sofiamarchetti.design',
+        linkedin: 'linkedin.com/in/sofiamarchetti',
+        github: '',
+        summary:
+          'Product designer with 7 years crafting end-to-end experiences for consumer apps used by millions. Deeply fluent in research, interaction design, and design systems. Led design for a checkout redesign that increased conversion by 16% and shipped an award-winning onboarding flow.',
+        photo: '',
+      },
+      experience: [
+        {
+          id: 'exp-1',
+          company: 'Orbital Health',
+          role: 'Senior Product Designer',
+          location: 'Los Angeles, CA',
+          startDate: '2021-02',
+          endDate: '',
+          current: true,
+          bullets: [
+            'Led end-to-end redesign of the appointment booking flow, increasing completion rate by 16%',
+            'Built and maintain a design system used by 6 product teams, cutting design-to-dev handoff time in half',
+            'Ran generative and evaluative research with 50+ users to inform the 2023 product roadmap',
+            'Won an internal design award for a redesigned onboarding flow that reduced drop-off by 24%',
+          ],
+        },
+        {
+          id: 'exp-2',
+          company: 'Fernbridge Studio',
+          role: 'Product Designer',
+          location: 'Los Angeles, CA',
+          startDate: '2018-03',
+          endDate: '2021-01',
+          current: false,
+          bullets: [
+            'Designed core flows for a consumer app that grew from 10,000 to 500,000 monthly active users',
+            'Facilitated bi-weekly design critiques and established a Figma component library adopted org-wide',
+            'Partnered with engineering to define and ship accessibility improvements meeting WCAG 2.1 AA',
+          ],
+        },
+      ],
+      education: [
+        {
+          id: 'edu-1',
+          school: 'Art Center College of Design',
+          degree: 'B.F.A.',
+          field: 'Interaction Design',
+          location: 'Pasadena, CA',
+          startDate: '2014-09',
+          endDate: '2018-05',
+          details: '',
+        },
+      ],
+      projects: [
+        {
+          id: 'proj-1',
+          name: 'Daybreak — habit tracker concept',
+          description: 'Self-directed case study exploring habit-formation UX, featured on the Muzli design newsletter.',
+          link: 'sofiamarchetti.design/daybreak',
+          tech: ['Figma', 'Principle', 'User Research'],
+        },
+      ],
+      skills: [
+        { id: 'sk-1', category: 'Design', items: ['Interaction Design', 'Design Systems', 'Prototyping', 'Accessibility'] },
+        { id: 'sk-2', category: 'Research', items: ['User Interviews', 'Usability Testing', 'A/B Testing'] },
+        { id: 'sk-3', category: 'Tools', items: ['Figma', 'Principle', 'Framer', 'Maze'] },
+      ],
+      certifications: [],
+      languages: [
+        { id: 'lang-1', name: 'English', level: 'Native' },
+        { id: 'lang-2', name: 'Italian', level: 'Fluent' },
+      ],
+      sectionOrder: STANDARD_ORDER,
+      hiddenSections: [],
+      template: 'modern',
+      accentColor: '#b91c1c',
+      fontFamily: 'sans',
+      fontScale: 1,
+    },
+  },
+  {
+    id: 'recent-graduate',
+    label: 'Recent Graduate',
+    blurb: 'Entry-level, education-forward',
+    data: {
+      personal: {
+        fullName: 'Jordan Blake',
+        title: 'Marketing Coordinator',
+        email: 'jordan.blake@email.com',
+        phone: '+1 (555) 145-7723',
+        location: 'Columbus, OH',
+        website: '',
+        linkedin: 'linkedin.com/in/jordanblake',
+        github: '',
+        summary:
+          'Recent marketing graduate with hands-on experience from two internships and a student-led campaign that grew a campus organization\'s membership by 35%. Organized, data-curious, and comfortable picking up new tools quickly.',
+        photo: '',
+      },
+      experience: [
+        {
+          id: 'exp-1',
+          company: 'Buckeye Student Media',
+          role: 'Marketing Intern',
+          location: 'Columbus, OH',
+          startDate: '2024-06',
+          endDate: '2024-08',
+          current: false,
+          bullets: [
+            'Built a content calendar and scheduled 5 posts/week across Instagram and TikTok, growing followers by 22% over the summer',
+            'Analyzed post performance weekly and presented findings to a 4-person marketing team',
+            'Assisted in planning a campus event that drew 300+ attendees',
+          ],
+        },
+        {
+          id: 'exp-2',
+          company: 'Ohio State Marketing Club',
+          role: 'VP of Membership',
+          location: 'Columbus, OH',
+          startDate: '2023-09',
+          endDate: '2024-05',
+          current: false,
+          bullets: [
+            'Led a recruitment campaign that grew club membership from 60 to 81 students in one semester',
+            'Coordinated 8 guest speaker events, managing outreach, logistics, and post-event surveys',
+          ],
+        },
+      ],
+      education: [
+        {
+          id: 'edu-1',
+          school: 'The Ohio State University',
+          degree: 'B.S.',
+          field: 'Marketing',
+          location: 'Columbus, OH',
+          startDate: '2021-08',
+          endDate: '2025-05',
+          details: 'GPA: 3.7/4.0. Relevant coursework: Consumer Behavior, Digital Marketing Analytics, Brand Strategy.',
+        },
+      ],
+      projects: [],
+      skills: [
+        { id: 'sk-1', category: 'Marketing', items: ['Social Media Strategy', 'Content Creation', 'Email Marketing'] },
+        { id: 'sk-2', category: 'Tools', items: ['Canva', 'Google Analytics', 'Mailchimp', 'Excel'] },
+      ],
+      certifications: [{ id: 'cert-1', name: 'Google Analytics Certification', issuer: 'Google', date: '2024-11', link: '' }],
+      languages: [{ id: 'lang-1', name: 'English', level: 'Native' }],
+      sectionOrder: EDU_FIRST_ORDER,
+      hiddenSections: [],
+      template: 'minimal',
+      accentColor: '#0891b2',
+      fontFamily: 'sans',
+      fontScale: 1,
+    },
+  },
+];

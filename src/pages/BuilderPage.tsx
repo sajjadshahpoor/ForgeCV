@@ -29,6 +29,7 @@ import { CertificationsForm, LanguagesForm } from '../components/builder/ExtrasF
 import { SectionManager } from '../components/builder/SectionManager';
 import { DesignPanel } from '../components/builder/DesignPanel';
 import { AIPanel } from '../components/builder/AIPanel';
+import { SamplePickerModal } from '../components/builder/SamplePickerModal';
 import { exportCvAsJson, importCvFromFile } from '../lib/storage';
 
 type Tab = 'content' | 'design' | 'ai';
@@ -37,10 +38,11 @@ type MobileView = 'edit' | 'preview';
 const PREVIEW_WIDTH_PX = 794; // 210mm at 96dpi
 
 export function BuilderPage({ onBack }: { onBack: () => void }) {
-  const { cv, setCv, resetCv, loadSample } = useCvStore();
+  const { cv, setCv, resetCv } = useCvStore();
   const [tab, setTab] = useState<Tab>('content');
   const [mobileView, setMobileView] = useState<MobileView>('edit');
   const [zoom, setZoom] = useState(0.72);
+  const [samplePickerOpen, setSamplePickerOpen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const previewWrapRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -98,7 +100,7 @@ export function BuilderPage({ onBack }: { onBack: () => void }) {
           <Logo size={22} />
         </div>
         <div className="flex flex-wrap items-center justify-end gap-1.5 sm:gap-2">
-          <Button size="sm" variant="ghost" onClick={loadSample} title="Load sample">
+          <Button size="sm" variant="ghost" onClick={() => setSamplePickerOpen(true)} title="Load sample">
             <Wand2 size={13} /> <span className="hidden sm:inline">Load sample</span>
           </Button>
           <Button size="sm" variant="ghost" onClick={() => fileRef.current?.click()} title="Import JSON">
@@ -182,6 +184,8 @@ export function BuilderPage({ onBack }: { onBack: () => void }) {
           </div>
         </div>
       </div>
+
+      <SamplePickerModal open={samplePickerOpen} onClose={() => setSamplePickerOpen(false)} />
     </div>
   );
 }

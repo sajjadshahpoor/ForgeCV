@@ -12,14 +12,14 @@ import type {
   SectionId,
   TemplateId,
 } from '../types';
-import { emptyCv, sampleCv } from '../data/sampleData';
+import { emptyCv, SAMPLE_PROFILES } from '../data/sampleData';
 import { loadCv, saveCv } from '../lib/storage';
 
 interface CvStore {
   cv: CvData;
   setCv: (cv: CvData) => void;
   resetCv: () => void;
-  loadSample: () => void;
+  loadSampleById: (id: string) => void;
 
   updatePersonal: (patch: Partial<PersonalInfo>) => void;
 
@@ -67,7 +67,10 @@ export const useCvStore = create<CvStore>((set) => ({
 
   setCv: (cv) => set({ cv }),
   resetCv: () => set({ cv: { ...emptyCv, sectionOrder: [...emptyCv.sectionOrder] } }),
-  loadSample: () => set({ cv: JSON.parse(JSON.stringify(sampleCv)) }),
+  loadSampleById: (id) => {
+    const profile = SAMPLE_PROFILES.find((p) => p.id === id);
+    if (profile) set({ cv: JSON.parse(JSON.stringify(profile.data)) });
+  },
 
   updatePersonal: (patch) =>
     set((s) => ({ cv: { ...s.cv, personal: { ...s.cv.personal, ...patch } } })),
