@@ -21,7 +21,7 @@ export function ContactRow({ cv, className = '', iconSize = 12 }: { cv: CvData; 
   ].filter(Boolean) as { icon: ReactNode; text: string }[];
 
   return (
-    <div className={`flex flex-wrap items-center gap-x-3 gap-y-1 ${className}`}>
+    <div className={`flex flex-wrap items-center gap-x-3 gap-y-1 ${className}`} style={{ color: '#555' }}>
       {items.map((it, i) => (
         <span key={i} className="flex items-center gap-1">
           {it.icon}
