@@ -32,6 +32,7 @@ import { DesignPanel } from '../components/builder/DesignPanel';
 import { AIPanel } from '../components/builder/AIPanel';
 import { SamplePickerModal } from '../components/builder/SamplePickerModal';
 import { ShareModal } from '../components/builder/ShareModal';
+import { LocalAiStatusToast } from '../components/builder/LocalAiStatusToast';
 import { exportCvAsJson, importCvFromFile } from '../lib/storage';
 
 type Tab = 'content' | 'design' | 'ai';
@@ -193,6 +194,7 @@ export function BuilderPage({ onBack }: { onBack: () => void }) {
 
       <SamplePickerModal open={samplePickerOpen} onClose={() => setSamplePickerOpen(false)} />
       <ShareModal open={shareModalOpen} onClose={() => setShareModalOpen(false)} cv={cv} />
+      <LocalAiStatusToast />
     </div>
   );
 }

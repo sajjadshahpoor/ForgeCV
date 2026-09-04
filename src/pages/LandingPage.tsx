@@ -11,8 +11,8 @@ const FEATURES = [
   },
   {
     icon: <Zap size={18} />,
-    title: 'Optional live AI writing',
-    body: 'Connect a free Google Gemini key to get AI-drafted summaries and one-click bullet rewrites. Your key never leaves your browser.',
+    title: 'AI writing, zero setup',
+    body: "Click \"Write with AI\" and it just works — a small AI model downloads once into your browser and writes summaries and bullet rewrites from then on. No account, no key, no waiting on anyone.",
   },
   {
     icon: <Link2 size={18} />,

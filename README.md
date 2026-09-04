@@ -9,8 +9,9 @@ A free, open-source resume builder with AI keyword matching built in — no sign
 Most "AI resume builder" products put the AI behind a paywall and your data behind an account. ForgeCV does the opposite:
 
 - **Offline AI keyword matching, for free, forever.** Paste a job description and ForgeCV extracts the skills/keywords that matter and checks which ones already appear in your resume — the same ATS signal recruiting software looks for. This runs as a rule-based engine entirely in your browser; no API, no cost, no rate limit.
-- **Optional live AI writing.** If you want AI-drafted summaries and one-click bullet rewrites, paste your own free [Google Gemini API key](https://aistudio.google.com/apikey). It's stored only in your browser's `localStorage` and called directly from your browser to Google — it never touches a server of ours, because there isn't one.
-- **Your data never leaves your device**, except when you choose to use the optional live-AI feature above. Everything else — your resume content, template choice, colors — lives in `localStorage`. Export to PDF or JSON any time.
+- **AI writing with zero setup.** Click "Write with AI" and it just works — a small instruction-tuned model ([SmolLM2-360M-Instruct](https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct)) downloads once (~350MB, then cached by the browser) and runs entirely on-device via [transformers.js](https://github.com/huggingface/transformers.js), no key or account required. Bullet rewrites are shown as a suggestion to accept or discard rather than applied silently, and a guard blocks any rewrite that introduces a number that wasn't in the original — small on-device models occasionally do that, and a wrong stat on a resume is worse than no rewrite at all.
+- **Optional faster/higher-quality AI.** If you want noticeably better writing quality or don't want to wait on the one-time model download, paste your own free [Google Gemini API key](https://aistudio.google.com/apikey) instead. It's stored only in your browser's `localStorage` and called directly from your browser to Google — it never touches a server of ours, because there isn't one.
+- **Your data never leaves your device**, except when you choose to use the optional Gemini upgrade above. Everything else — your resume content, template choice, colors — lives in `localStorage`. Export to PDF or JSON any time.
 
 ## Features
 
@@ -18,13 +19,15 @@ Most "AI resume builder" products put the AI behind a paywall and your data behi
 - Drag-and-drop section reordering and show/hide per section
 - Drag-and-drop experience bullet points with weak-phrasing and missing-metric detection
 - Offline ATS keyword match score against any pasted job description
-- Optional Gemini-powered summary generation and bullet rewriting
+- Zero-setup on-device AI writing (summaries, bullet rewrites, keyword-driven bullet suggestions), with an optional Gemini upgrade
+- Shareable resume links — the whole resume is encoded in the URL, no server involved
+- 6 sample resumes across different fields to start from
 - Photo upload, JSON import/export, autosave to `localStorage`
 - One-click PDF export via the browser's native print pipeline
 
 ## Tech stack
 
-React 19, TypeScript, Vite, Tailwind CSS v4, Zustand, dnd-kit, react-to-print. No backend, no database, no build-time secrets.
+React 19, TypeScript, Vite, Tailwind CSS v4, Zustand, dnd-kit, react-to-print, transformers.js. No backend, no database, no build-time secrets.
 
 ## Running locally
 

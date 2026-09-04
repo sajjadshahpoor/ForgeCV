@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Briefcase, Plus, Trash2, Sparkles, AlertCircle, Wand2 } from 'lucide-react';
+import { Briefcase, Plus, Trash2, Sparkles, AlertCircle, Wand2, Check, X } from 'lucide-react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -10,24 +10,39 @@ import { SectionCard } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { SortableItem, DragHandle } from '../ui/SortableItem';
 import { critiqueBullets } from '../../lib/ats';
-import { hasApiKey, rewriteBullet } from '../../lib/gemini';
+import { rewriteBulletAI, currentAiEngine } from '../../lib/aiEngine';
+import { extractNumbers } from '../../lib/localAi';
+import { useLocalAiStore } from '../../store/useLocalAiStore';
 
 function BulletRow({ exp, index, bullet }: { exp: ExperienceItem; index: number; bullet: string }) {
   const { updateBullet, removeBullet } = useCvStore();
   const [rewriting, setRewriting] = useState(false);
+  const [rewriteError, setRewriteError] = useState('');
+  const [suggestion, setSuggestion] = useState('');
+  const localAi = useLocalAiStore();
   const issues = critiqueBullets(exp.bullets).filter((s) => s.bulletIndex === index);
   const issue = issues[0];
+  const showDownloadHint = rewriting && currentAiEngine() === 'local' && localAi.status === 'loading';
+  const droppedMetric =
+    suggestion && [...extractNumbers(bullet)].some((n) => !extractNumbers(suggestion).has(n));
 
   async function onRewrite() {
     setRewriting(true);
+    setRewriteError('');
+    setSuggestion('');
     try {
-      const improved = await rewriteBullet(bullet, exp.role, '');
-      updateBullet(exp.id, index, improved);
-    } catch {
-      // silent - key issues surface in the AI panel
+      const improved = await rewriteBulletAI(bullet, exp.role);
+      setSuggestion(improved);
+    } catch (e) {
+      setRewriteError(e instanceof Error ? e.message : 'Something went wrong — try again.');
     } finally {
       setRewriting(false);
     }
+  }
+
+  function acceptSuggestion() {
+    updateBullet(exp.id, index, suggestion);
+    setSuggestion('');
   }
 
   return (
@@ -42,17 +57,15 @@ function BulletRow({ exp, index, bullet }: { exp: ExperienceItem; index: number;
           className="flex-1 resize-none rounded-lg border border-ink-700 bg-ink-900 px-3 py-1.5 text-sm text-ink-50 outline-none placeholder:text-ink-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30"
         />
         <div className="flex shrink-0 flex-col gap-1 pt-0.5">
-          {hasApiKey() && (
-            <button
-              type="button"
-              title="Rewrite with AI"
-              onClick={onRewrite}
-              disabled={rewriting}
-              className="text-ink-400 hover:text-violet-400 disabled:opacity-50"
-            >
-              <Wand2 size={14} className={rewriting ? 'animate-pulse' : ''} />
-            </button>
-          )}
+          <button
+            type="button"
+            title="Rewrite with AI"
+            onClick={onRewrite}
+            disabled={rewriting}
+            className="text-ink-400 hover:text-violet-400 disabled:opacity-50"
+          >
+            <Wand2 size={14} className={rewriting ? 'animate-pulse' : ''} />
+          </button>
           <button
             type="button"
             title="Remove bullet"
@@ -63,6 +76,38 @@ function BulletRow({ exp, index, bullet }: { exp: ExperienceItem; index: number;
           </button>
         </div>
       </div>
+      {showDownloadHint && (
+        <p className="ml-3 text-xs text-violet-300">First time only: downloading the built-in AI model ({localAi.progress}%)…</p>
+      )}
+      {rewriteError && <p className="ml-3 text-xs text-amber-400">{rewriteError}</p>}
+      {suggestion && (
+        <div className="ml-3 rounded-lg border border-violet-500/30 bg-violet-500/5 p-2.5">
+          <p className="mb-1.5 text-[10px] font-medium uppercase tracking-wide text-violet-300">AI suggestion — review before using</p>
+          <p className="text-xs text-ink-200">{suggestion}</p>
+          {droppedMetric && (
+            <p className="mt-1.5 flex items-start gap-1 text-[11px] text-amber-400/90">
+              <AlertCircle size={11} className="mt-0.5 shrink-0" /> This draft doesn't include a number from your
+              original bullet — check it kept what matters before using it.
+            </p>
+          )}
+          <div className="mt-2 flex gap-2">
+            <button
+              type="button"
+              onClick={acceptSuggestion}
+              className="flex items-center gap-1 rounded-md bg-violet-500/20 px-2 py-1 text-[11px] font-medium text-violet-200 hover:bg-violet-500/30"
+            >
+              <Check size={11} /> Use this
+            </button>
+            <button
+              type="button"
+              onClick={() => setSuggestion('')}
+              className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] text-ink-400 hover:text-ink-100"
+            >
+              <X size={11} /> Discard
+            </button>
+          </div>
+        </div>
+      )}
       {issue && (
         <div className="ml-3 flex items-start gap-1.5 text-xs text-amber-400/90">
           <AlertCircle size={12} className="mt-0.5 shrink-0" />

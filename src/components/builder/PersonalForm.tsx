@@ -4,7 +4,8 @@ import { useCvStore } from '../../store/useCvStore';
 import { Input, TextArea } from '../ui/Field';
 import { SectionCard } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { hasApiKey, generateSummary } from '../../lib/gemini';
+import { generateSummaryAI, currentAiEngine } from '../../lib/aiEngine';
+import { useLocalAiStore } from '../../store/useLocalAiStore';
 
 export function PersonalForm() {
   const { cv, updatePersonal } = useCvStore();
@@ -12,6 +13,7 @@ export function PersonalForm() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState('');
+  const localAi = useLocalAiStore();
 
   function onPhotoPick(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -27,7 +29,7 @@ export function PersonalForm() {
     try {
       const topSkills = cv.skills.flatMap((s) => s.items).slice(0, 8).join(', ');
       const years = cv.experience.length ? `${cv.experience.length}+ roles` : '';
-      const text = await generateSummary(p.title, years, topSkills, '');
+      const text = await generateSummaryAI(p.title, years, topSkills);
       updatePersonal({ summary: text });
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Something went wrong.');
@@ -35,6 +37,8 @@ export function PersonalForm() {
       setGenerating(false);
     }
   }
+
+  const showDownloadHint = generating && currentAiEngine() === 'local' && localAi.status === 'loading';
 
   return (
     <SectionCard title="Personal details" icon={<User size={16} />}>
@@ -76,12 +80,10 @@ export function PersonalForm() {
         <div>
           <div className="mb-1.5 flex items-center justify-between">
             <span className="text-sm font-medium text-ink-200">Professional summary</span>
-            {hasApiKey() && (
-              <Button type="button" size="sm" variant="ghost" onClick={onGenerateSummary} disabled={generating}>
-                <Sparkles size={13} className={generating ? 'animate-pulse' : ''} />
-                {generating ? 'Writing…' : 'Write with AI'}
-              </Button>
-            )}
+            <Button type="button" size="sm" variant="ghost" onClick={onGenerateSummary} disabled={generating}>
+              <Sparkles size={13} className={generating ? 'animate-pulse' : ''} />
+              {generating ? 'Writing…' : 'Write with AI'}
+            </Button>
           </div>
           <TextArea
             rows={4}
@@ -90,9 +92,9 @@ export function PersonalForm() {
             placeholder="2–3 sentences on who you are, your experience, and your biggest wins."
           />
           {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
-          {!hasApiKey() && (
-            <p className="mt-1 text-xs text-ink-400">
-              Tip: connect a free Gemini key in the AI Match tab to auto-draft this.
+          {showDownloadHint && (
+            <p className="mt-1 text-xs text-violet-300">
+              First time only: downloading the built-in AI model ({localAi.progress}%)…
             </p>
           )}
         </div>

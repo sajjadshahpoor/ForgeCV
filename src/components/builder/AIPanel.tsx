@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
-import { Target, KeyRound, CheckCircle2, XCircle, Loader2, Sparkles, ExternalLink } from 'lucide-react';
+import { Target, KeyRound, CheckCircle2, XCircle, Loader2, Sparkles, ExternalLink, Cpu, Cloud } from 'lucide-react';
 import { useCvStore } from '../../store/useCvStore';
 import { scoreAgainstJob } from '../../lib/ats';
-import { getStoredApiKey, setStoredApiKey, testApiKey, hasApiKey, suggestKeywordBullet } from '../../lib/gemini';
+import { getStoredApiKey, setStoredApiKey, testApiKey } from '../../lib/gemini';
+import { suggestKeywordBulletAI, currentAiEngine } from '../../lib/aiEngine';
+import { useLocalAiStore } from '../../store/useLocalAiStore';
 import { SectionCard } from '../ui/Card';
 import { TextArea, Input } from '../ui/Field';
 import { Button } from '../ui/Button';
@@ -42,6 +44,8 @@ function KeywordSuggestButton({ keyword }: { keyword: string }) {
   const { cv, addSkillGroup, updateSkillGroup } = useCvStore();
   const [loading, setLoading] = useState(false);
   const [suggestion, setSuggestion] = useState('');
+  const localAi = useLocalAiStore();
+  const showDownloadHint = loading && currentAiEngine() === 'local' && localAi.status === 'loading';
 
   function quickAddToSkills() {
     const misc = cv.skills.find((g) => g.category.toLowerCase() === 'additional skills');
@@ -60,10 +64,10 @@ function KeywordSuggestButton({ keyword }: { keyword: string }) {
   async function onSuggestBullet() {
     setLoading(true);
     try {
-      const text = await suggestKeywordBullet(keyword, cv.personal.title);
+      const text = await suggestKeywordBulletAI(keyword, cv.personal.title);
       setSuggestion(text);
     } catch {
-      setSuggestion('Could not reach AI — check your API key in the settings above.');
+      setSuggestion('The built-in AI hit a snag — try again in a moment.');
     } finally {
       setLoading(false);
     }
@@ -76,19 +80,36 @@ function KeywordSuggestButton({ keyword }: { keyword: string }) {
         <button type="button" onClick={quickAddToSkills} className="text-[11px] text-ink-400 underline decoration-dotted hover:text-ink-100">
           add to skills
         </button>
-        {hasApiKey() && (
-          <button
-            type="button"
-            onClick={onSuggestBullet}
-            disabled={loading}
-            className="text-[11px] text-ink-400 underline decoration-dotted hover:text-violet-400 disabled:opacity-50"
-          >
-            {loading ? 'thinking…' : 'suggest bullet'}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={onSuggestBullet}
+          disabled={loading}
+          className="text-[11px] text-ink-400 underline decoration-dotted hover:text-violet-400 disabled:opacity-50"
+        >
+          {loading ? 'thinking…' : 'suggest bullet'}
+        </button>
       </div>
+      {showDownloadHint && (
+        <p className="ml-1 text-[11px] text-violet-300">First time only: downloading the built-in AI model ({localAi.progress}%)…</p>
+      )}
       {suggestion && <p className="ml-1 rounded-md bg-ink-800/60 p-2 text-xs text-ink-200">{suggestion}</p>}
     </div>
+  );
+}
+
+function EngineStatusBadge() {
+  const engine = currentAiEngine();
+  if (engine === 'gemini') {
+    return (
+      <span className="flex items-center gap-1 rounded-full bg-emerald-400/10 px-2.5 py-1 text-[11px] font-medium text-emerald-300">
+        <Cloud size={11} /> Using Gemini
+      </span>
+    );
+  }
+  return (
+    <span className="flex items-center gap-1 rounded-full bg-violet-400/10 px-2.5 py-1 text-[11px] font-medium text-violet-300">
+      <Cpu size={11} /> Using built-in AI
+    </span>
   );
 }
 
@@ -111,12 +132,14 @@ function ApiKeySettings() {
     <div className="rounded-xl border border-ink-800 bg-ink-950/40 p-4">
       <div className="mb-2 flex items-center gap-2">
         <KeyRound size={15} className="text-violet-400" />
-        <p className="text-sm font-medium text-ink-100">Optional: connect live AI writing</p>
+        <p className="text-sm font-medium text-ink-100">Optional: faster, higher-quality AI</p>
       </div>
       <p className="mb-3 text-xs leading-relaxed text-ink-400">
-        The keyword matcher above works fully offline, for free, forever. For AI-written summaries and bullet
-        rewrites, paste a free Google Gemini API key — it's stored only in your browser (localStorage) and sent
-        directly to Google, never through any server of ours.
+        Every AI feature here already works with zero setup — summaries, bullet rewrites, and keyword suggestions
+        run on a small AI model built into ForgeCV that downloads once and runs entirely on your device. If you
+        want noticeably better writing quality or faster responses, you can optionally connect a free Google
+        Gemini key instead — it's stored only in your browser and sent directly to Google, never through any
+        server of ours.
       </p>
       <div className="flex gap-2">
         <Input
@@ -164,7 +187,11 @@ export function AIPanel() {
 
   return (
     <div className="flex flex-col gap-4">
-      <SectionCard title="AI keyword match" icon={<Target size={16} />}>
+      <SectionCard
+        title="AI keyword match"
+        icon={<Target size={16} />}
+        action={<EngineStatusBadge />}
+      >
         <p className="mb-3 text-xs text-ink-400">
           Paste a job description. ForgeCV scans it offline in your browser, extracts the skills and keywords that
           matter, and checks which ones already appear in your resume — the same signal applicant-tracking systems
